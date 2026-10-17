@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HANOVA — Innovation Procurement Network</title>
+<meta name="description" content="HANOVA connects government challenges with eligible startups, experts and controlled pilots — a startup-friendly public procurement pathway.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,460;9..144,560;9..144,650&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ================= TOKENS ================= */
+  :root{
+    --ink:#17140F;
+    --navy:#1F3358;
+    --navy-deep:#152848;
+    --marigold:#E2861A;
+    --marigold-soft:#F2A94D;
+    --teal:#146B5C;
+    --teal-soft:#2C9080;
+    --paper:#FAF8F3;
+    --paper-deep:#F0EBDF;
+    --line: rgba(23,20,15,0.14);
+    --slate:#6B6558;
+
+    --bg: var(--paper);
+    --bg-raised:#FFFFFF;
+    --bg-sunken: var(--paper-deep);
+    --text: var(--ink);
+    --text-dim: var(--slate);
+    --border: var(--line);
+    --accent: var(--navy);
+    --on-accent:#fff;
+
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --maxw:1220px;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#111114; --bg-raised:#191A1F; --bg-sunken:#0C0D10;
+      --text:#F1EEE6; --text-dim:#9E998C; --border: rgba(241,238,230,0.14);
+      --accent: var(--marigold-soft);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111114; --bg-raised:#191A1F; --bg-sunken:#0C0D10;
+    --text:#F1EEE6; --text-dim:#9E998C; --border: rgba(241,238,230,0.14);
+    --accent: var(--marigold-soft);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));}
+  body{
+    margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:560;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  ::selection{background:var(--marigold-soft); color:#1a1200;}
+  :focus-visible{outline:2px solid var(--marigold); outline-offset:3px; border-radius:3px;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+
+  /* ================= NAV ================= */
+  .nav{position:sticky; top:0; z-index:60; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding-top:env(safe-area-inset-top,0px);}
+  .nav-inner{max-width:var(--maxw); margin:0 auto; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px;}
+  .brand{display:flex; align-items:center; gap:11px; font-family:var(--font-display); font-weight:650; font-size:1.3rem;}
+  .brand-mark{width:32px; height:32px; border-radius:8px; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:.95rem; font-weight:650;}
+  :root[data-theme="dark"] .brand-mark, :root:not([data-theme="light"]) .brand-mark{background:var(--marigold-soft); color:#1a1200;}
+
+  .nav-links{display:flex; gap:2px; list-style:none; margin:0; padding:0; position:relative;}
+  .nav-links a{position:relative; text-decoration:none; font-size:.92rem; font-weight:500; color:var(--text-dim); padding:9px 14px; display:inline-block; border-radius:8px; transition:color .15s;}
+  .nav-links a::after{content:""; position:absolute; left:14px; right:14px; bottom:5px; height:2px; background:var(--navy); transform:scaleX(0); transform-origin:left; transition:transform .2s ease;}
+  :root[data-theme="dark"] .nav-links a::after, :root:not([data-theme="light"]) .nav-links a::after{background:var(--marigold-soft);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a.active{color:var(--text);}
+  .nav-links a.active::after{transform:scaleX(1);}
+
+  .nav-right{display:flex; align-items:center; gap:10px;}
+  .theme-btn{width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--bg-raised); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem;}
+  .theme-btn:hover{background:var(--bg-sunken);}
+  .burger{display:none; width:38px; height:38px; border-radius:8px; border:1px solid var(--border); background:var(--bg-raised); cursor:pointer;}
+  .burger span{display:block; width:16px; height:2px; background:var(--text); margin:3px auto;}
+  .mobile-panel{display:none; flex-direction:column; padding:4px 32px 16px; border-bottom:1px solid var(--border); background:var(--bg);}
+  .mobile-panel a{padding:12px 2px; text-decoration:none; color:var(--text); font-weight:500; border-bottom:1px solid var(--border); font-size:.96rem;}
+  .mobile-panel.open{display:flex;}
+  @media (max-width:880px){ .nav-links{display:none;} .burger{display:block;} }
+
+  /* ================= BUTTONS ================= */
+  .btn{display:inline-flex; align-items:center; gap:8px; justify-content:center; padding:13px 24px; border-radius:10px; font-weight:600; font-size:.95rem; border:1px solid transparent; cursor:pointer; text-decoration:none; transition:transform .1s, box-shadow .15s, background .15s, border-color .15s, opacity .15s;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--navy); color:#fff;}
+  .btn-primary:hover{box-shadow:0 8px 22px rgba(31,51,88,.28);}
+  :root[data-theme="dark"] .btn-primary, :root:not([data-theme="light"]) .btn-primary{background:var(--marigold-soft); color:#1a1200;}
+  .btn-outline{background:transparent; border-color:var(--border); color:var(--text);}
+  .btn-outline:hover{border-color:var(--text-dim); background:var(--bg-sunken);}
+  .btn-ghost-invert{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.28); color:#fff;}
+  .btn-ghost-invert:hover{background:rgba(255,255,255,.18);}
+  .btn-hero-cta{background:var(--marigold-soft); color:#241606;}
+  .btn-hero-cta:hover{box-shadow:0 8px 22px rgba(226,134,26,.35);}
+  .btn-block{width:100%;}
+
+  /* ================= HERO ================= */
+  .hero{background:var(--navy); color:#F1EEE6; padding:88px 0 96px; position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; right:-120px; top:-160px; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle, rgba(226,134,26,.30), transparent 70%); pointer-events:none;}
+  .hero-inner{position:relative; display:grid; grid-template-columns:1.2fr .8fr; gap:60px; align-items:end;}
+  .eyebrow{font-size:.82rem; color:var(--marigold-soft); font-weight:600; letter-spacing:.01em; margin-bottom:20px; display:flex; align-items:center; gap:10px;}
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--marigold-soft); flex-shrink:0;}
+  .hero h1{font-size:clamp(2.4rem,5vw,4rem); line-height:1.05; font-weight:560; max-width:16ch; margin-bottom:26px;}
+  .hero h1 .hl{color:var(--marigold-soft); font-style:italic;}
+  .hero p.lede{font-size:1.16rem; color:#CBD1DF; max-width:50ch; margin-bottom:34px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+
+  .hero-rail{border-left:2px solid rgba(255,255,255,.22); padding-left:26px; display:flex; flex-direction:column; gap:22px;}
+  .hero-rail .r-item{position:relative;}
+  .hero-rail .r-item::before{content:""; position:absolute; left:-32px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--marigold-soft); border:3px solid var(--navy);}
+  .hero-rail .r-item b{display:block; font-size:.98rem; margin-bottom:2px;}
+  .hero-rail .r-item span{font-size:.84rem; color:#AEB6C8;}
+
+  @media (max-width:900px){ .hero-inner{grid-template-columns:1fr; gap:40px;} .hero{padding:56px 0 60px;} }
+
+  /* ================= SECTION SHELL ================= */
+  section{padding:86px 0;}
+  .band{background:var(--bg-sunken);}
+  .section-head{max-width:640px; margin-bottom:50px;}
+  .kicker{font-size:.82rem; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px;}
+  .section-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem); margin-bottom:16px; line-height:1.15;}
+  .section-head p{color:var(--text-dim); font-size:1.05rem;}
+
+  /* ================= TIMELINE (how it works) ================= */
+  .timeline{position:relative; max-width:920px;}
+  .timeline::before{content:""; position:absolute; left:20px; top:8px; bottom:8px; width:2px; background:var(--border);}
+  .t-row{display:grid; grid-template-columns:44px 1fr; gap:0 26px; margin-bottom:40px; position:relative;}
+  .t-row:last-child{margin-bottom:0;}
+  .t-dot{width:44px; height:44px; border-radius:50%; background:var(--bg-raised); border:2px solid var(--t-color); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:650; color:var(--t-color); font-size:1.02rem; z-index:1;}
+  .t-body{padding-top:5px;}
+  .t-body .stage-tag{font-size:.76rem; font-weight:700; color:var(--t-color); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px;}
+  .t-body h3{font-size:1.28rem; margin-bottom:8px;}
+  .t-body p{color:var(--text-dim); font-size:.98rem; max-width:56ch;}
+  .t-body .mini-steps{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .mini-chip{font-size:.78rem; background:var(--bg-sunken); border:1px solid var(--border); border-radius:999px; padding:5px 12px; color:var(--text-dim);}
+
+  .principle-strip{margin-top:50px; text-align:left; background:var(--navy); color:#F1EEE6; border-radius:16px; padding:26px 30px; font-size:.98rem; display:flex; gap:18px; align-items:flex-start;}
+  .principle-strip .p-icon{font-size:1.4rem; flex-shrink:0;}
+  .principle-strip b{color:var(--marigold-soft);}
+
+  /* ================= PORTAL SWITCHER ================= */
+  .role-tabs{display:flex; gap:10px; margin-bottom:36px; flex-wrap:wrap;}
+  .role-tab{padding:13px 22px; border-radius:12px; border:1px solid var(--border); background:var(--bg-raised); cursor:pointer; font-weight:600; font-size:.95rem; color:var(--text-dim); display:flex; align-items:center; gap:10px; transition:border-color .15s, color .15s, background .15s;}
+  .role-tab .ic{font-size:1.1rem;}
+  .role-tab:hover{border-color:var(--text-dim);}
+  .role-tab.active{color:#fff; border-color:transparent;}
+  .role-tab[data-role="gov"].active{background:var(--navy);}
+  .role-tab[data-role="startup"].active{background:var(--marigold);}
+  .role-tab[data-role="expert"].active{background:var(--teal);}
+
+  .role-panel{display:none; border:1px solid var(--border); border-radius:20px; overflow:hidden; background:var(--bg-raised);}
+  .role-panel.active{display:grid; grid-template-columns:1fr 1fr;}
+  .rp-info{padding:44px; border-right:1px solid var(--border);}
+  .rp-info .rp-icon{width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:20px;}
+  [data-role-panel="gov"] .rp-icon{background:color-mix(in srgb, var(--navy) 16%, transparent); color:var(--navy);}
+  [data-role-panel="startup"] .rp-icon{background:color-mix(in srgb, var(--marigold) 16%, transparent); color:var(--marigold);}
+  [data-role-panel="expert"] .rp-icon{background:color-mix(in srgb, var(--teal) 16%, transparent); color:var(--teal);}
+  .rp-info h3{font-size:1.5rem; margin-bottom:12px;}
+  .rp-info p.desc{color:var(--text-dim); margin-bottom:22px; font-size:1rem;}
+  .rp-list{list-style:none; margin:0 0 26px; padding:0; display:flex; flex-direction:column; gap:12px;}
+  .rp-list li{font-size:.94rem; color:var(--text-dim); display:flex; gap:10px; align-items:flex-start;}
+  .rp-list li::before{content:"✓"; color:var(--rp-color,var(--navy)); font-weight:700; flex-shrink:0;}
+  [data-role-panel="gov"] .rp-list li::before{color:var(--navy);}
+  [data-role-panel="startup"] .rp-list li::before{color:var(--marigold);}
+  [data-role-panel="expert"] .rp-list li::before{color:var(--teal);}
+
+  .rp-demo{padding:44px; background:var(--bg-sunken); display:flex; flex-direction:column;}
+  .rp-demo .demo-label{font-size:.8rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-dim); font-weight:700; margin-bottom:16px;}
+
+  @media (max-width:820px){ .role-panel.active{grid-template-columns:1fr;} .rp-info{border-right:none; border-bottom:1px solid var(--border);} }
+
+  /* ================= FORMS (inline in role panel) ================= */
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:.83rem; font-weight:600; margin-bottom:6px;}
+  .field input, .field select, .field textarea{width:100%; padding:11px 13px; border-radius:9px; border:1px solid var(--border); background:var(--bg-raised); color:var(--text); font-family:inherit; font-size:.92rem;}
+  .field textarea{resize:vertical; min-height:66px;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--accent);}
+  .success-banner{display:none; background:color-mix(in srgb, var(--teal) 18%, transparent); border:1px solid var(--teal); color:var(--teal); border-radius:9px; padding:10px 13px; font-size:.84rem; margin-bottom:14px; font-weight:600;}
+  .success-banner.show{display:block;}
+  .submitted-list{margin-top:16px; border-top:1px solid var(--border); padding-top:14px; display:flex; flex-direction:column; gap:9px; max-height:150px; overflow-y:auto;}
+  .submitted-item{background:var(--bg-raised); border:1px solid var(--border); border-radius:9px; padding:9px 12px; font-size:.83rem;}
+  .submitted-item b{display:block; margin-bottom:2px;}
+  .submitted-item span{color:var(--text-dim); font-size:.77rem;}
+  .empty-note{font-size:.84rem; color:var(--text-dim); font-style:italic; padding:10px 0;}
+
+  /* ================= ARCHITECTURE ================= */
+  .arch-wrap{display:grid; grid-template-columns:1.25fr .95fr; gap:30px; align-items:start;}
+  .layer-diagram{position:relative; padding-left:26px;}
+  .layer-diagram::before{content:""; position:absolute; left:9px; top:10px; bottom:10px; width:2px; background:var(--border);}
+  .layer{position:relative; margin-bottom:22px; padding-left:8px;}
+  .layer:last-child{margin-bottom:0;}
+  .layer::before{content:""; position:absolute; left:-26px; top:6px; width:20px; height:20px; border-radius:50%; background:var(--l-color); border:3px solid var(--bg);}
+  .layer b{display:block; font-size:1.02rem; margin-bottom:4px;}
+  .layer span{color:var(--text-dim); font-size:.92rem;}
+
+  .tech-table{background:var(--bg-raised); border:1px solid var(--border); border-radius:16px; padding:26px;}
+  .tech-table h4{font-size:.9rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-dim); margin-bottom:16px; font-weight:700;}
+  .tech-row{display:flex; justify-content:space-between; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); font-size:.92rem;}
+  .tech-row:last-child{border-bottom:none;}
+  .tech-row .k{color:var(--accent); font-weight:600; min-width:90px;}
+  .tech-row .v{color:var(--text-dim); text-align:right;}
+  .impl-strip{margin-top:22px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:.86rem;}
+  .impl-strip .chip{background:var(--bg-sunken); border:1px solid var(--border); border-radius:999px; padding:6px 13px; color:var(--text-dim);}
+  .impl-strip .chip:not(:last-child)::after{content:"→"; margin-left:8px; color:var(--text-dim);}
+
+  @media (max-width:900px){ .arch-wrap{grid-template-columns:1fr;} }
+
+  /* ================= FEASIBILITY ACCORDION ================= */
+  .accordion{border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--bg-raised);}
+  .acc-item{border-bottom:1px solid var(--border);}
+  .acc-item:last-child{border-bottom:none;}
+  .acc-trigger{width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:22px 26px; display:flex; align-items:center; justify-content:space-between; gap:16px; font-size:1.02rem; font-weight:650; font-family:var(--font-display); color:var(--text);}
+  .acc-trigger .plus{font-size:1.3rem; color:var(--accent); transition:transform .2s; flex-shrink:0;}
+  .acc-item.open .plus{transform:rotate(45deg);}
+  .acc-panel{max-height:0; overflow:hidden; transition:max-height .28s ease;}
+  .acc-panel-inner{padding:0 26px 26px; display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  .acc-col h5{font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-dim); margin-bottom:10px; font-weight:700;}
+  .acc-col ul{margin:0; padding-left:18px; color:var(--text-dim); font-size:.92rem; display:flex; flex-direction:column; gap:8px;}
+  @media (max-width:640px){ .acc-panel-inner{grid-template-columns:1fr;} }
+
+  .role-note{margin-top:26px; background:var(--bg-sunken); border:1px solid var(--border); border-radius:12px; padding:18px 24px; font-size:.92rem; color:var(--text-dim); text-align:center;}
+  .role-note b{color:var(--text);}
+
+  /* ================= IMPACT ================= */
+  .impact-wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start;}
+  .impact-list{display:flex; flex-direction:column;}
+  .impact-row{display:flex; gap:20px; padding:20px 0; border-bottom:1px solid var(--border);}
+  .impact-row:first-child{padding-top:0;}
+  .impact-row:last-child{border-bottom:none;}
+  .impact-row .num{font-family:var(--font-display); font-size:1.6rem; color:var(--accent); font-weight:650; min-width:34px;}
+  .impact-row h4{font-size:1.06rem; margin-bottom:6px;}
+  .impact-row p{color:var(--text-dim); font-size:.92rem;}
+
+  .outputs-col{background:var(--bg-sunken); border-radius:18px; padding:32px; border:1px solid var(--border);}
+  .outputs-col h4{font-size:.9rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-dim); margin-bottom:20px; font-weight:700;}
+  .o-step{display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--border);}
+  .o-step:last-child{border-bottom:none;}
+  .o-step .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0;}
+  .o-step b{font-size:.94rem;}
+  .o-step span{display:block; font-size:.8rem; color:var(--text-dim);}
+
+  @media (max-width:900px){ .impact-wrap{grid-template-columns:1fr;} }
+
+  /* ================= REFERENCES ================= */
+  .ref-list{display:flex; flex-direction:column;}
+  .ref-item{display:flex; gap:22px; padding:22px 0; border-bottom:1px solid var(--border); align-items:flex-start;}
+  .ref-item:first-child{padding-top:0;}
+  .ref-item:last-child{border-bottom:none;}
+  .ref-item .rn{font-family:var(--font-display); color:var(--accent); font-weight:650; font-size:1.15rem; width:30px; flex-shrink:0;}
+  .ref-item b{display:block; font-size:1rem; margin-bottom:4px;}
+  .ref-item span{color:var(--text-dim); font-size:.9rem;}
+
+  /* ================= FOOTER ================= */
+  footer{padding:44px 0 calc(44px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--border); background:var(--bg-sunken);}
+  .foot-inner{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; font-size:.86rem; color:var(--text-dim);}
+  .foot-tag{font-weight:650; color:var(--text); font-family:var(--font-display);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="brand-mark">H</span>HANOVA</div>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="#portals">Portals</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#feasibility">Feasibility</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+      <button class="burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="#home">Home</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#portals">Portals</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#feasibility">Feasibility</a>
+    <a href="#impact">Impact</a>
+    <a href="#references">References</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="home">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Smart India Hackathon 2026 — Problem Statement 26136</div>
+      <h1>Give good ideas a fair, <span class="hl">safe</span> way into government.</h1>
+      <p class="lede">Government departments rarely hear about the startups with the right answers. HANOVA is the missing pathway: post the real problem, match it to eligible startups, run a small controlled trial, and only then decide — with a person signing off at every gate.</p>
+      <div class="hero-actions">
+        <a href="#portals" class="btn btn-hero-cta">Open a portal</a>
+        <a href="#how-it-works" class="btn btn-ghost-invert">See the pathway</a>
+      </div>
+    </div>
+    <div class="hero-rail">
+      <div class="r-item"><b>Challenge posted</b><span>A department names the outcome it needs</span></div>
+      <div class="r-item"><b>Startups matched</b><span>Verified against eligibility rules</span></div>
+      <div class="r-item"><b>Pilot run</b><span>Small, sandboxed, milestone-based</span></div>
+      <div class="r-item"><b>Human decision</b><span>Evidence reviewed, never automated</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how-it-works">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">How it works</div>
+      <h2>One pathway, six accountable steps</h2>
+      <p>Nothing skips ahead. Each step hands off cleanly to the next, and a person signs off before it moves.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="t-row" style="--t-color:var(--navy)">
+        <div class="t-dot">1</div>
+        <div class="t-body">
+          <div class="stage-tag">Challenge intake</div>
+          <h3>The department names the real problem</h3>
+          <p>Not a vague brief — the outcome it wants, its constraints, and exactly how success will be measured.</p>
+          <div class="mini-steps"><span class="mini-chip">Outcome templates</span><span class="mini-chip">Constraints</span><span class="mini-chip">Success metrics</span></div>
+        </div>
+      </div>
+      <div class="t-row" style="--t-color:var(--marigold)">
+        <div class="t-dot">2</div>
+        <div class="t-body">
+          <div class="stage-tag">Discover &amp; evaluate</div>
+          <h3>Eligible startups are found and scored</h3>
+          <p>The pool is checked against eligibility rules, independent experts are matched in, and every score is recorded transparently.</p>
+          <div class="mini-steps"><span class="mini-chip">Startup discovery</span><span class="mini-chip">Eligibility checks</span><span class="mini-chip">Expert matching</span></div>
+        </div>
+      </div>
+      <div class="t-row" style="--t-color:var(--teal)">
+        <div class="t-dot">3</div>
+        <div class="t-body">
+          <div class="stage-tag">Controlled pilot</div>
+          <h3>A small, sandboxed trial runs first</h3>
+          <p>The startup delivers against clear milestones in a bounded pilot — nothing touches production or real budgets yet.</p>
+          <div class="mini-steps"><span class="mini-chip">Sandbox</span><span class="mini-chip">Milestones</span><span class="mini-chip">No live risk</span></div>
+        </div>
+      </div>
+      <div class="t-row" style="--t-color:var(--navy)">
+        <div class="t-dot">4</div>
+        <div class="t-body">
+          <div class="stage-tag">Evidence &amp; decision</div>
+          <h3>An independent reviewer validates the results</h3>
+          <p>Milestone evidence is checked by someone who wasn't running the pilot, before any scale-up conversation starts.</p>
+          <div class="mini-steps"><span class="mini-chip">Independent validation</span><span class="mini-chip">Audit trail</span></div>
+        </div>
+      </div>
+      <div class="t-row" style="--t-color:var(--marigold)">
+        <div class="t-dot">5</div>
+        <div class="t-body">
+          <div class="stage-tag">Procurement / scale</div>
+          <h3>An authorised official makes the call</h3>
+          <p>If the evidence holds up, the department moves to procurement through its existing, statutory process — HANOVA hands off, it doesn't decide.</p>
+          <div class="mini-steps"><span class="mini-chip">Human sign-off</span><span class="mini-chip">Existing procurement rules</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="principle-strip">
+      <span class="p-icon">🔒</span>
+      <div><b>The rule that never bends:</b> human-in-the-loop, rule-based eligibility, a full audit trail, milestone evidence — and no automated procurement decision, ever.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PORTALS ================= -->
+<section id="portals" class="band">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Portals</div>
+      <h2>Pick your door in</h2>
+      <p>Every person in the pathway gets a workspace built for their job. Switch roles below to try the live demo — entries are saved to your browser.</p>
+    </div>
+
+    <div class="role-tabs" role="tablist" aria-label="Choose a portal">
+      <button class="role-tab active" data-role="gov" role="tab" aria-selected="true"><span class="ic">🏛️</span>Government</button>
+      <button class="role-tab" data-role="startup" role="tab" aria-selected="false"><span class="ic">🚀</span>Startup</button>
+      <button class="role-tab" data-role="expert" role="tab" aria-selected="false"><span class="ic">🧭</span>Expert</button>
+    </div>
+
+    <div class="role-panel active" data-role-panel="gov" role="tabpanel">
+      <div class="rp-info">
+        <div class="rp-icon">🏛️</div>
+        <h3>Government portal</h3>
+        <p class="desc">Post a real challenge, watch matched and eligible startups arrive, and approve pilots once the evidence is in.</p>
+        <ul class="rp-list">
+          <li>Outcome-based challenge templates</li>
+          <li>Live pilot &amp; milestone dashboard</li>
+          <li>One-click evidence review before sign-off</li>
+        </ul>
+      </div>
+      <div class="rp-demo">
+        <div class="demo-label">Try it — post a challenge</div>
+        <div class="success-banner" id="banner-gov">Challenge posted. Startups will be matched shortly.</div>
+        <form data-form="gov" data-store="hanova_gov_challenges">
+          <div class="field"><label for="gov-dept">Department</label><input id="gov-dept" name="Department" required placeholder="e.g. Urban Development"></div>
+          <div class="field"><label for="gov-title">Challenge title</label><input id="gov-title" name="Title" required placeholder="e.g. Real-time waste collection tracking"></div>
+          <div class="field"><label for="gov-desc">Outcome you need</label><textarea id="gov-desc" name="Outcome" required placeholder="Describe the outcome, not the solution"></textarea></div>
+          <button type="submit" class="btn btn-primary btn-block">Post challenge</button>
+        </form>
+        <div class="submitted-list" id="list-gov"></div>
+      </div>
+    </div>
+
+    <div class="role-panel" data-role-panel="startup" role="tabpanel">
+      <div class="rp-info">
+        <div class="rp-icon">🚀</div>
+        <h3>Startup portal</h3>
+        <p class="desc">See real government demand, check your own eligibility instantly, and track every pilot milestone as it happens.</p>
+        <ul class="rp-list">
+          <li>Live list of open challenges</li>
+          <li>Instant eligibility self-check</li>
+          <li>Milestone and payment visibility</li>
+        </ul>
+      </div>
+      <div class="rp-demo">
+        <div class="demo-label">Try it — apply to a challenge</div>
+        <div class="success-banner" id="banner-startup">Application received. We'll run an eligibility check next.</div>
+        <form data-form="startup" data-store="hanova_startup_apps">
+          <div class="field"><label for="su-name">Startup name</label><input id="su-name" name="Startup" required placeholder="e.g. GreenRoute Labs"></div>
+          <div class="field"><label for="su-sector">Sector</label>
+            <select id="su-sector" name="Sector" required>
+              <option value="">Select sector</option>
+              <option>GovTech</option><option>CleanTech</option><option>HealthTech</option>
+              <option>AgriTech</option><option>FinTech</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="su-pitch">One-line pitch</label><textarea id="su-pitch" name="Pitch" required placeholder="What does your solution do?"></textarea></div>
+          <button type="submit" class="btn btn-primary btn-block">Submit application</button>
+        </form>
+        <div class="submitted-list" id="list-startup"></div>
+      </div>
+    </div>
+
+    <div class="role-panel" data-role-panel="expert" role="tabpanel">
+      <div class="rp-info">
+        <div class="rp-icon">🧭</div>
+        <h3>Expert portal</h3>
+        <p class="desc">Pick up structured evaluation assignments that match your field, and validate pilots against a clear rubric.</p>
+        <ul class="rp-list">
+          <li>Assignments matched to your expertise</li>
+          <li>Structured, transparent scoring rubric</li>
+          <li>Reusable evaluation history</li>
+        </ul>
+      </div>
+      <div class="rp-demo">
+        <div class="demo-label">Try it — register as an expert</div>
+        <div class="success-banner" id="banner-expert">Registered. You'll be matched to relevant pilots.</div>
+        <form data-form="expert" data-store="hanova_experts">
+          <div class="field"><label for="ex-name">Full name</label><input id="ex-name" name="Name" required placeholder="e.g. Dr. Ananya Rao"></div>
+          <div class="field"><label for="ex-field">Field of expertise</label><input id="ex-field" name="Field" required placeholder="e.g. Municipal engineering"></div>
+          <div class="field"><label for="ex-years">Years of experience</label><input id="ex-years" name="Experience" type="number" min="0" required placeholder="e.g. 8"></div>
+          <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <div class="submitted-list" id="list-expert"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section id="architecture">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Technical approach</div>
+      <h2>What's actually running underneath</h2>
+      <p>Four layers, each doing one job — plus the plain technology list, for anyone who wants to look under the hood.</p>
+    </div>
+
+    <div class="arch-wrap">
+      <div class="layer-diagram">
+        <div class="layer" style="--l-color:var(--navy)"><b>Stakeholder portal</b><span>Departments · Startups · Experts, each with their own workspace</span></div>
+        <div class="layer" style="--l-color:var(--teal)"><b>Intelligence &amp; matching</b><span>Challenge tagging, startup discovery, expertise matching</span></div>
+        <div class="layer" style="--l-color:var(--marigold)"><b>Evaluation &amp; pilot workspace</b><span>Eligibility, scoring, sandbox, milestones, independent validation</span></div>
+        <div class="layer" style="--l-color:var(--navy)"><b>Compliance &amp; procurement integration</b><span>IP/data clauses, audit logs, approvals, e-marketplace links</span></div>
+
+        <div class="impl-strip">
+          <span class="chip">Configure</span><span class="chip">Integrate</span><span class="chip">Pilot</span><span class="chip">Measure</span><span class="chip">Refine</span><span class="chip">Scale</span>
+        </div>
+      </div>
+
+      <div class="tech-table">
+        <h4>Proposed technology</h4>
+        <div class="tech-row"><span class="k">Frontend</span><span class="v">Next.js / React</span></div>
+        <div class="tech-row"><span class="k">Backend</span><span class="v">Node.js + Python services</span></div>
+        <div class="tech-row"><span class="k">Data</span><span class="v">PostgreSQL + document store</span></div>
+        <div class="tech-row"><span class="k">Security</span><span class="v">RBAC · encryption · audit logs</span></div>
+        <div class="tech-row"><span class="k">Integration</span><span class="v">REST APIs · notifications</span></div>
+        <div class="tech-row"><span class="k">AI support</span><span class="v">Discovery / matching, human approval</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEASIBILITY ================= -->
+<section id="feasibility" class="band">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Feasibility &amp; viability</div>
+      <h2>Built on existing procurement, not around it</h2>
+      <p>HANOVA doesn't replace the rules departments already follow — it adds the missing discovery-and-trial layer in front of them. Click a risk area to see how it's covered.</p>
+    </div>
+
+    <div class="accordion" id="feasAccordion">
+      <div class="acc-item open">
+        <button class="acc-trigger" aria-expanded="true">Eligibility &amp; regulatory mismatch<span class="plus">+</span></button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <div class="acc-col"><h5>Why it's feasible</h5><ul><li>Modular workflow — departments adopt it stage by stage</li><li>Uses existing startup recognition &amp; procurement pathways</li></ul></div>
+            <div class="acc-col"><h5>Mitigation</h5><ul><li>Configurable eligibility rules per department</li><li>Standard templates cut down on ambiguity</li></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" aria-expanded="false">IP &amp; sensitive government data<span class="plus">+</span></button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <div class="acc-col"><h5>Why it's feasible</h5><ul><li>Pilot gates keep exposure bounded before scale-up</li></ul></div>
+            <div class="acc-col"><h5>Mitigation</h5><ul><li>Standard IP / data / pilot clauses</li><li>Role-based access + encryption</li></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" aria-expanded="false">Pilot adoption &amp; evaluation bias<span class="plus">+</span></button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <div class="acc-col"><h5>Why it's feasible</h5><ul><li>Human approvals always stay with authorised officials</li></ul></div>
+            <div class="acc-col"><h5>Mitigation</h5><ul><li>Independent validation, separate from the pilot team</li><li>Evidence gates before any scale conversation</li></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" aria-expanded="false">Cybersecurity &amp; access control<span class="plus">+</span></button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <div class="acc-col"><h5>Why it's feasible</h5><ul><li>Built on standard, well-understood access patterns</li></ul></div>
+            <div class="acc-col"><h5>Mitigation</h5><ul><li>RBAC + encryption + full audit trail</li></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" aria-expanded="false">Payment or procurement delays<span class="plus">+</span></button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <div class="acc-col"><h5>Why it's feasible</h5><ul><li>Milestones make progress (and stalls) visible early</li></ul></div>
+            <div class="acc-col"><h5>Mitigation</h5><ul><li>Milestone tracking + payment visibility for both sides</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="role-note">Designed to <b>complement</b> — never replace — statutory procurement authority.</div>
+  </div>
+</section>
+
+<!-- ================= IMPACT ================= -->
+<section id="impact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Impact &amp; benefits</div>
+      <h2>What changes for each person in the loop</h2>
+      <p>The same pathway pays off differently depending on where you sit in it.</p>
+    </div>
+
+    <div class="impact-wrap">
+      <div class="impact-list">
+        <div class="impact-row"><span class="num">01</span><div><h4>Government</h4><p>Faster discovery, controlled pilots, evidence-based decisions.</p></div></div>
+        <div class="impact-row"><span class="num">02</span><div><h4>Startups</h4><p>Clearer demand signals, fairer access pathways, milestone visibility.</p></div></div>
+        <div class="impact-row"><span class="num">03</span><div><h4>Experts</h4><p>Structured evaluation, relevant assignments, reusable knowledge.</p></div></div>
+        <div class="impact-row"><span class="num">04</span><div><h4>Ecosystem</h4><p>More pilot-to-scale pathways and better innovation visibility overall.</p></div></div>
+      </div>
+
+      <div class="outputs-col">
+        <h4>Measurable process outputs</h4>
+        <div class="o-step"><span class="dot"></span><div><b>Challenges</b><span>structured</span></div></div>
+        <div class="o-step"><span class="dot"></span><div><b>Startups</b><span>discovered / screened</span></div></div>
+        <div class="o-step"><span class="dot"></span><div><b>Pilots</b><span>milestones + results</span></div></div>
+        <div class="o-step"><span class="dot"></span><div><b>Decisions</b><span>validated evidence</span></div></div>
+        <div class="o-step"><span class="dot"></span><div><b>Payments</b><span>milestone visibility</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REFERENCES ================= -->
+<section id="references" class="band">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Research &amp; references</div>
+      <h2>What this is grounded in</h2>
+    </div>
+
+    <div class="ref-list">
+      <div class="ref-item"><span class="rn">01</span><div><b>Smart India Hackathon 2026 — Problem Statement 26136</b><span>Official problem statement: Government of Maharashtra / Maharashtra State Innovation Society.</span></div></div>
+      <div class="ref-item"><span class="rn">02</span><div><b>Startup India — Public Procurement</b><span>DPIIT / Startup India guidance on public procurement and startup participation.</span></div></div>
+      <div class="ref-item"><span class="rn">03</span><div><b>General Financial Rules 2017 — Department of Expenditure</b><span>Procurement framework and startup-related eligibility provisions, subject to applicable conditions.</span></div></div>
+      <div class="ref-item"><span class="rn">04</span><div><b>HANOVA ecosystem evidence</b><span>Hanova meetup / community records and documented ecosystem examples supplied for this solution.</span></div></div>
+    </div>
+    <div class="role-note">HANOVA's proposed role: connect the right government challenge, eligible startup, expert, pilot structure and evidence — while procurement decisions remain with authorised institutions.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div><span class="foot-tag">HANOVA</span> — Build · Connect · Grow</div>
+    <div>Smart India Hackathon 2026 · Team HANOVA</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- THEME ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var root = document.documentElement;
+  function currentTheme(){
+    var saved = null;
+    try { saved = localStorage.getItem('hanova_theme'); } catch(e){}
+    if(saved) return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function applyTheme(t){
+    root.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+    try { localStorage.setItem('hanova_theme', t); } catch(e){}
+  }
+  applyTheme(currentTheme());
+  themeBtn.addEventListener('click', function(){
+    applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- MOBILE NAV ---------- */
+  var burger = document.getElementById('burgerBtn');
+  var panel = document.getElementById('mobilePanel');
+  burger.addEventListener('click', function(){
+    var open = panel.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  panel.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ panel.classList.remove('open'); burger.setAttribute('aria-expanded','false'); });
+  });
+
+  /* ---------- ACTIVE NAV LINK ON SCROLL ---------- */
+  var sectionIds = ['home','how-it-works','portals','architecture','feasibility','impact','references'];
+  var sections = sectionIds.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  function onScroll(){
+    var pos = window.scrollY + 110;
+    var activeId = sections[0] && sections[0].id;
+    sections.forEach(function(sec){ if(sec.offsetTop <= pos) activeId = sec.id; });
+    navLinks.forEach(function(link){
+      link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- ROLE TABS (PORTALS) ---------- */
+  var tabs = document.querySelectorAll('.role-tab');
+  var panels = document.querySelectorAll('.role-panel');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var role = tab.getAttribute('data-role');
+      tabs.forEach(function(t){ t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+      panels.forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-role-panel') === role); });
+    });
+  });
+
+  /* ---------- ACCORDION (FEASIBILITY) ---------- */
+  document.querySelectorAll('.acc-trigger').forEach(function(trigger){
+    var item = trigger.closest('.acc-item');
+    var body = item.querySelector('.acc-panel');
+    function setState(open){
+      item.classList.toggle('open', open);
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+    }
+    setState(item.classList.contains('open'));
+    trigger.addEventListener('click', function(){ setState(!item.classList.contains('open')); });
+  });
+  window.addEventListener('resize', function(){
+    document.querySelectorAll('.acc-item.open .acc-panel').forEach(function(panelEl){
+      panelEl.style.maxHeight = panelEl.scrollHeight + 'px';
+    });
+  });
+
+  /* ---------- DEMO FORMS: save to localStorage ---------- */
+  function safeGet(key){ try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; } catch(e){ return []; } }
+  function safeSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
+  function escapeHtml(str){ var div = document.createElement('div'); div.textContent = str == null ? '' : String(str); return div.innerHTML; }
+  function renderList(kind, listEl){
+    var key = { gov:'hanova_gov_challenges', startup:'hanova_startup_apps', expert:'hanova_experts' }[kind];
+    var items = safeGet(key);
+    listEl.innerHTML = '';
+    if(!items.length){
+      var empty = document.createElement('div');
+      empty.className = 'empty-note';
+      empty.textContent = 'Nothing submitted yet — try the form above.';
+      listEl.appendChild(empty);
+      return;
+    }
+    items.slice().reverse().forEach(function(item){
+      var row = document.createElement('div');
+      row.className = 'submitted-item';
+      var keys = Object.keys(item);
+      row.innerHTML = '<b>' + escapeHtml(item[keys[0]]) + '</b><span>' + escapeHtml(item[keys[1]] || '') + '</span>';
+      listEl.appendChild(row);
+    });
+  }
+  document.querySelectorAll('form[data-form]').forEach(function(form){
+    var kind = form.getAttribute('data-form');
+    var storeKey = form.getAttribute('data-store');
+    var listEl = document.getElementById('list-' + kind);
+    var banner = document.getElementById('banner-' + kind);
+    if(listEl) renderList(kind, listEl);
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var data = {};
+      Array.prototype.forEach.call(form.elements, function(el){ if(el.name) data[el.name] = el.value; });
+      var items = safeGet(storeKey);
+      items.push(data);
+      safeSet(storeKey, items);
+      if(listEl) renderList(kind, listEl);
+      if(banner){ banner.classList.add('show'); setTimeout(function(){ banner.classList.remove('show'); }, 4000); }
+      form.reset();
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
